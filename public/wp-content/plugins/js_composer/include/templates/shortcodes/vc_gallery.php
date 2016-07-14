@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-
 /**
  * Shortcode attributes
  * @var $atts
@@ -22,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_gallery
  */
-$thumbnail = '';
 $title = $source = $type = $onclick = $custom_links = $custom_links_target = $img_size = $external_img_size = $images = $custom_srcs = $el_class = $interval = $css = '';
 $large_img_src = '';
 
@@ -48,17 +43,16 @@ if ( 'nivo' === $type ) {
 
 	$slides_wrap_start = '<div class="nivoSlider">';
 	$slides_wrap_end = '</div>';
-} elseif ( 'flexslider' === $type || 'flexslider_fade' === $type || 'flexslider_slide' === $type || 'fading' === $type ) {
+} else if ( 'flexslider' === $type || 'flexslider_fade' === $type || 'flexslider_slide' === $type || 'fading' === $type ) {
 	$el_start = '<li>';
 	$el_end = '</li>';
 	$slides_wrap_start = '<ul class="slides">';
 	$slides_wrap_end = '</ul>';
 	wp_enqueue_style( 'flexslider' );
 	wp_enqueue_script( 'flexslider' );
-} elseif ( 'image_grid' === $type ) {
+} else if ( 'image_grid' === $type ) {
 	wp_enqueue_script( 'vc_grid-js-imagesloaded' );
 	wp_enqueue_script( 'isotope' );
-	wp_enqueue_style( 'isotope-css' );
 
 	$el_start = '<li class="isotope-item">';
 	$el_end = '</li>';
@@ -75,10 +69,10 @@ $flex_fx = '';
 if ( 'flexslider' === $type || 'flexslider_fade' === $type || 'fading' === $type ) {
 	$type = ' wpb_flexslider flexslider_fade flexslider';
 	$flex_fx = ' data-flex_fx="fade"';
-} elseif ( 'flexslider_slide' === $type ) {
+} else if ( 'flexslider_slide' === $type ) {
 	$type = ' wpb_flexslider flexslider_slide flexslider';
 	$flex_fx = ' data-flex_fx="slide"';
-} elseif ( 'image_grid' === $type ) {
+} else if ( 'image_grid' === $type ) {
 	$type = ' wpb_image_grid';
 }
 
@@ -86,10 +80,9 @@ if ( '' === $images ) {
 	$images = '-1,-2,-3';
 }
 
-$pretty_rel_random = ' data-rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"';
+$pretty_rel_random = ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"';
 
 if ( 'custom_link' === $onclick ) {
-	$custom_links = vc_value_from_safe( $custom_links );
 	$custom_links = explode( ',', $custom_links );
 }
 
@@ -99,9 +92,7 @@ switch ( $source ) {
 		break;
 
 	case 'external_link':
-		$images = vc_value_from_safe( $custom_srcs );
-		$images = explode( ',', $images );
-
+		$images = explode( ',', $custom_srcs );
 		break;
 }
 foreach ( $images as $i => $image ) {

@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 
 class Vc_Grid_Element {
@@ -16,7 +13,7 @@ class Vc_Grid_Element {
 		'vc_gitem_row',
 		'vc_gitem_col',
 		'vc_gitem_post_title',
-		'vc_gitem_icon',
+		'vc_gitem_icon'
 	);
 
 	public function shortcodes() {
@@ -61,7 +58,7 @@ class Vc_Grid_Element {
 	public function renderParam() {
 		$output = '<div class="vc_grid-element-constructor" data-vc-grid-element="builder"></div>'
 		          . '<a href="#" data-vc-control="add-row">' . __( 'Add row', 'js_composer' ) . '</a>';
-		if ( false === self::$templates_added ) {
+		if ( self::$templates_added === false ) {
 			foreach ( $this->shortcodes as $tag ) {
 				$method = vc_camel_case( $tag . '_template' );
 				if ( method_exists( $this, $method ) ) {
@@ -174,7 +171,7 @@ class Vc_Grid_Element {
 	public function vcGitemColShortcode( $atts, $content = '' ) {
 		$width = '12';
 		$atts = shortcode_atts( array(
-			'width' => '12',
+			'width' => '12'
 		), $atts );
 		extract( $atts );
 
@@ -266,7 +263,8 @@ function vc_vc_grid_element_form_field( $settings, $value ) {
 function vc_load_vc_grid_element_param() {
 	vc_add_shortcode_param(
 		'vc_grid_element',
-		'vc_vc_grid_element_form_field'
+		'vc_vc_grid_element_form_field',
+		vc_asset_url( 'js/params/vc_grid_element.js' )
 	);
 }
 

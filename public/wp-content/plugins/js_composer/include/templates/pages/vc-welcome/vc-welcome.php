@@ -1,17 +1,12 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-?>
 <div class="vc_welcome-tab changelog">
 	<div class="vc_feature-section-teaser">
 		<div>
 			<img class="vc-featured-img" src="<?php echo vc_asset_url( 'vc/vc-welcome/screenshot.png' ); ?>"/>
 
-			<h3><?php _e( 'Default Templates for Posts', 'js_composer' ); ?></h3>
+			<h3><?php _e( 'Faster and Beautiful Content Management', 'js_composer' ); ?></h3>
 
-			<p><?php _e( 'Visual Composer 4.12 introduces new template options to speed up your WordPress website content management. Now you are able to set up templates for your pages, posts and custom post types by default.', 'js_composer' ); ?></p>
-			<p><?php _e( 'Meaning, every time you create new post there will be default layout available - so you should just change the information and Publish it. Working with authors, but afraid they can break your layout? Not any more! With default template setup and existing Role Manager you will be able to set up amazing mechanism for your WordPress website.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Visual Composer version 4.7 has been focused on enhancing your beloved user interface in terms of design and performance. New fully resizable element parameter windows offers best possible content management experience you have been waiting for.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Significantly improved performance allows take content management to the next level by reducing time you spend building layouts or adjusting elements. ', 'js_composer' ); ?></p>
 		</div>
 	</div>
 
@@ -19,24 +14,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/01.png' ); ?>"/>
-			<h4><?php _e( 'Disable Row', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'Performance Improvement', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'Need to hide some part of your content, but don\'t want to delete it? Disable any Visual Composer row with all the content - one click only.
-', 'js_composer' ); ?></p>
+			<p><?php _e( 'Thanks to intelligent initialization Visual Composer has become faster than ever. Experience advanced editing in no time.', 'js_composer' ); ?></p>
 		</div>
 		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/02.png' ); ?>"/>
-			<h4><?php _e( 'Polylang and qTranslate X', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'New User Interface', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'Visual Composer is ensured to be fully compatible with Polylang and also popular version of qTranslate X so you can create multi-language websites.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Based on the same beloved principles Visual Composer offers carefully crafted UI which will make your content management more intuitive.', 'js_composer' ); ?></p>
 		</div>
 		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/03.png' ); ?>"/>
-			<h4><?php _e( 'Nofollow and Actions', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'Element Presets', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'Enhanced link selection allows you to set nofollow attributes for your links with one click. Moreover, button element now has onclick event for better tracking options.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Create element presets right in parameter window - no more need to constantly style same elements again and again.', 'js_composer' ); ?></p>
+		</div>
+	</div>
+
+	<h3>Other valuable features</h3>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Pageable Content Element', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Tabs based content element that allows you create pageable content blocks with just one click.', 'js_composer' ); ?></p>
+		</div>
+
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Design Options', 'js_composer' ); ?></h4>
+			<p><?php _e( 'All Visual Composer elements now has Design Options tab for more advanced styling.', 'js_composer' ); ?></p>
+		</div>
+
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'External Images', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Single Image and Gallery now has option to accept external images through simple link parsing.', 'js_composer' ); ?></p>
+		</div>
+
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Border Radius', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Enhance your layout by applying border radius through Design Options tab.', 'js_composer' ); ?></p>
 		</div>
 	</div>
 

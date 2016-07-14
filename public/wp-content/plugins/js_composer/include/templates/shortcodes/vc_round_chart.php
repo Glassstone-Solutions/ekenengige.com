@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-
 /**
  * Shortcode attributes
  * @var $title
@@ -76,13 +72,13 @@ $base_colors = array(
 		'warning' => '#e08700',
 		'danger' => '#ff4b3c',
 		'inverse' => '#464646',
-	),
+	)
 );
 $colors = array(
 	'flat' => array(
 		'normal' => $base_colors['normal'],
-		'active' => $base_colors['active'],
-	),
+		'active' => $base_colors['active']
+	)
 );
 foreach ( $base_colors['normal'] as $name => $color ) {
 	$colors['modern']['normal'][ $name ] = array( vc_colorCreator( $color, 7 ), $color );
@@ -108,7 +104,7 @@ if ( ! empty( $tooltips ) ) {
 }
 
 if ( ! empty( $animation ) ) {
-	$options[] = 'data-vc-animation="' . esc_attr( $animation ) . '"';
+	$options[] = 'data-vc-animation="' . $animation . '"';
 }
 
 if ( ! empty( $stroke_color ) ) {
@@ -122,11 +118,11 @@ if ( ! empty( $stroke_color ) ) {
 		$color = $base_colors['normal'][ $stroke_color ];
 	}
 
-	$options[] = 'data-vc-stroke-color="' . esc_attr( $color ) . '"';
+	$options[] = 'data-vc-stroke-color="' . $color . '"';
 }
 
 if ( ! empty( $stroke_width ) ) {
-	$options[] = 'data-vc-stroke-width="' . esc_attr( $stroke_width ) . '"';
+	$options[] = 'data-vc-stroke-width="' . $stroke_width . '"';
 }
 
 $values = (array) vc_param_group_parse_atts( $values );
@@ -151,7 +147,7 @@ foreach ( $values as $k => $v ) {
 		'value' => intval( isset( $v['value'] ) ? $v['value'] : 0 ),
 		'color' => $color,
 		'highlight' => $highlight,
-		'label' => isset( $v['title'] ) ? $v['title'] : '',
+		'label' => isset( $v['title'] ) ? $v['title'] : ''
 	);
 }
 

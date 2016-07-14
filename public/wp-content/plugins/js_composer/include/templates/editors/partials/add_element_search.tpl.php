@@ -1,8 +1,3 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-?>
 <div class="vc_ui-panel-header-actions">
 	<div class="vc_ui-search-box">
 		<div class="vc_ui-search-box-input">

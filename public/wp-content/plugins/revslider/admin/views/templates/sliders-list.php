@@ -18,7 +18,7 @@ if( !defined( 'ABSPATH') ) exit();
 				$alias = $slider->getAlias();
 				$isFromPosts = $slider->isSlidesFromPosts();
 				$isFromStream = $slider->isSlidesFromStream();
-				$strSource = __("Gallery",'revslider');
+				$strSource = __("Gallery",REVSLIDER_TEXTDOMAIN);
 				$preicon = "revicon-picture-1";
 				
 				$is_favorite = $slider->isFavorite();
@@ -30,55 +30,48 @@ if( !defined( 'ABSPATH') ) exit();
 				$rowClass = "";
 				$slider_type = 'gallery';
 				if($isFromPosts == true){
-					$strSource = __('Posts','revslider');
+					$strSource = __('Posts',REVSLIDER_TEXTDOMAIN);
 					$preicon ="revicon-doc";
 					$rowClass = "class='row_alt'";
 					$numReal = $slider->getNumRealSlides();
 					$slider_type = 'posts';
-					//check if we are woocommerce
-					if($slider->getParam("source_type","gallery") == 'woocommerce'){
-						$strSource = __('WooCommerce','revslider');
-						$preicon ="revicon-doc";
-						$rowClass = "class='row_alt'";
-						$slider_type = 'woocommerce';
-					}
 				}elseif($isFromStream !== false){
-					$strSource = __('Social','revslider');
+					$strSource = __('Social',REVSLIDER_TEXTDOMAIN);
 					$preicon ="revicon-doc";
 					$rowClass = "class='row_alt'";
 					switch($isFromStream){
 						case 'facebook':
-							$strSource = __('Facebook','revslider');
+							$strSource = __('Facebook',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-facebook";
 							$numReal = $slider->getNumRealSlides(false, 'facebook');
 							$slider_type = 'facebook';
 						break;
 						case 'twitter':
-							$strSource = __('Twitter','revslider');
+							$strSource = __('Twitter',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-twitter";
 							$numReal = $slider->getNumRealSlides(false, 'twitter');
 							$slider_type = 'twitter';
 						break;
 						case 'instagram':
-							$strSource = __('Instagram','revslider');
+							$strSource = __('Instagram',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-info";
 							$numReal = $slider->getNumRealSlides(false, 'instagram');
 							$slider_type = 'instagram';
 						break;
 						case 'flickr':
-							$strSource = __('Flickr','revslider');
+							$strSource = __('Flickr',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-flickr";
 							$numReal = $slider->getNumRealSlides(false, 'flickr');
 							$slider_type = 'flickr';
 						break;
 						case 'youtube':
-							$strSource = __('YouTube','revslider');
+							$strSource = __('YouTube',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-youtube";
 							$numReal = $slider->getNumRealSlides(false, 'youtube');
 							$slider_type = 'youtube';
 						break;
 						case 'vimeo':
-							$strSource = __('Vimeo','revslider');
+							$strSource = __('Vimeo',REVSLIDER_TEXTDOMAIN);
 							$preicon ="eg-icon-vimeo";
 							$numReal = $slider->getNumRealSlides(false, 'vimeo');
 							$slider_type = 'vimeo';
@@ -92,6 +85,7 @@ if( !defined( 'ABSPATH') ) exit();
 				
 				if(intval($numSlides) == 0){
 					$first_slide_id = 'new&slider='.$id;
+					
 					
 				}else{
 					$slides = $slider->getSlides(false);
@@ -108,6 +102,7 @@ if( !defined( 'ABSPATH') ) exit();
 				
 				$editLink = self::getViewUrl(RevSliderAdmin::VIEW_SLIDER,"id=$id");
 				
+				$orderSlidesLink = ($isFromPosts) ? self::getViewUrl(RevSliderAdmin::VIEW_SLIDES,"id=$id") : '';
 				$editSlidesLink = self::getViewUrl(RevSliderAdmin::VIEW_SLIDE,"id=$first_slide_id");
 
 				$showTitle = RevSliderFunctions::getHtmlLink($editLink, $showTitle);
@@ -118,8 +113,8 @@ if( !defined( 'ABSPATH') ) exit();
 				$numSlides = "";
 				$isFromPosts = false;
 			}
-			//var_dump($first_slide_image_thumb);
-			//exit;
+			
+			//print_r($first_slide_image_thumb);
 			?>
 			<li class="tls-slide tls-stype-all tls-stype-<?php echo $slider_type; ?>" data-favorit="<?php echo ($is_favorite) ? 'a' : 'b'; ?>" data-id="<?php echo $id; ?>" data-name="<?php echo $title; ?>" data-type="<?php echo $slider_type; ?>">
 				<div class="tls-main-metas">
@@ -147,25 +142,32 @@ if( !defined( 'ABSPATH') ) exit();
 
 				<div class="tls-hover-metas">
 					<!--<span class="tls-shortcode"><?php echo $shortCode; ?></span>-->
-					<span class="button-primary rs-embed-slider" ><i class="eg-icon-plus"></i><?php _e("Embed Slider",'revslider'); ?></span>
-					<?php if(!RS_DEMO){ ?>
-						<a class="button-primary  export_slider_overview" id="export_slider_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export",'revslider'); ?></a>
-						<?php
-						$operations = new RevSliderOperations();
-						$general_settings = $operations->getGeneralSettingsValues();
-						
-						$show_dev_export = RevSliderBase::getVar($general_settings, 'show_dev_export', 'off');
-						
-						if($show_dev_export == 'on'){
-							?>
-							<a class="button-primary  export_slider_standalone" id="export_slider_standalone_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export to HTML",'revslider'); ?></a>
-							<?php
-						}
+					<span class="button-primary rs-embed-slider" ><i class="eg-icon-plus"></i><?php _e("Embed Slider",REVSLIDER_TEXTDOMAIN); ?></span>		
+					
+					
+					<?php
+					if($isFromPosts){
 						?>
-					<?php } ?>
-					<a class="button-primary  button_delete_slider" id="button_delete_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-trash"></i><?php _e("Delete",'revslider'); ?></a>
-					<a class="button-primary  button_duplicate_slider" id="button_duplicate_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-picture"></i><?php _e("Duplicate",'revslider'); ?></a>
-					<div id="button_preview_<?php echo $id; ?>" class="button_slider_preview button-primary revgray"><i class="revicon-search-1"></i><?php _e("Preview",'revslider'); ?></div>
+						<a class="button-primary " href='<?php echo $orderSlidesLink; ?>'><i class="revicon-pencil-1"></i><?php _e("Order Posts",REVSLIDER_TEXTDOMAIN); ?></a>
+						<?php
+					}
+					?>
+					<a class="button-primary  export_slider_overview" id="export_slider_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export",REVSLIDER_TEXTDOMAIN); ?></a>
+					<?php
+					$operations = new RevSliderOperations();
+					$general_settings = $operations->getGeneralSettingsValues();
+					
+					$show_dev_export = RevSliderBase::getVar($general_settings, 'show_dev_export', 'off');
+					
+					if($show_dev_export == 'on'){
+						?>
+						<a class="button-primary  export_slider_standalone" id="export_slider_standalone_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export to HTML",REVSLIDER_TEXTDOMAIN); ?></a>
+						<?php
+					}
+					?>
+					<a class="button-primary  button_delete_slider" id="button_delete_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-trash"></i><?php _e("Delete",REVSLIDER_TEXTDOMAIN); ?></a>
+					<a class="button-primary  button_duplicate_slider" id="button_duplicate_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-picture"></i><?php _e("Duplicate",REVSLIDER_TEXTDOMAIN); ?></a>
+					<div id="button_preview_<?php echo $id; ?>" class="button_slider_preview button-primary revgray"><i class="revicon-search-1"></i><?php _e("Preview",REVSLIDER_TEXTDOMAIN); ?></div>
 				</div>
 				<div class="tls-dimmme"></div>
 			</li>
@@ -174,7 +176,6 @@ if( !defined( 'ABSPATH') ) exit();
 		}
 	}
 	?>
-	
 	<li class="tls-slide tls-addnewslider">
 		<a href='<?php echo $addNewLink; ?>'>
 			<span class="tls-main-metas">
@@ -182,7 +183,7 @@ if( !defined( 'ABSPATH') ) exit();
 					<span class="slider_list_add_buttons add_new_slider_icon"></span>
 				</span>
 				<span class="tls-title-wrapper">			
-					<span class="tls-title"><?php _e("New Slider",'revslider'); ?></span>					
+					<span class="tls-title"><?php _e("New Slider",REVSLIDER_TEXTDOMAIN); ?></span>					
 				</span>
 			</span>
 		</a>
@@ -194,25 +195,23 @@ if( !defined( 'ABSPATH') ) exit();
 					<i class="slider_list_add_buttons add_new_template_icon"></i>
 				</span>
 				<span class="tls-title-wrapper">			
-					<span class="tls-title"><?php _e("Add Slider From Template",'revslider'); ?></span>					
+					<span class="tls-title"><?php _e("Add Slider Template",REVSLIDER_TEXTDOMAIN); ?></span>					
 				</span>
 			</span>
 		</a>
 	</li>
-	<?php if(!RevSliderFunctionsWP::isAdminUser() && apply_filters('revslider_restrict_role', true)){ }else{ ?>
-		<li class="tls-slide tls-addnewslider">
-			<a href="javascript:void(0);" id="button_import_slider">
-				<span class="tls-main-metas">
-					<span class="tls-new-icon-wrapper">
-						<i class="slider_list_add_buttons  add_new_import_icon"></i>
-					</span>
-					<span class="tls-title-wrapper">			
-						<span class="tls-title"><?php _e("Import Slider",'revslider'); ?></span>					
-					</span>
+	<li class="tls-slide tls-addnewslider">
+		<a href="javascript:void(0);" id="button_import_slider">
+			<span class="tls-main-metas">
+				<span class="tls-new-icon-wrapper">
+					<i class="slider_list_add_buttons  add_new_import_icon"></i>
 				</span>
-			</a>		
-		</li>
-	<?php } ?>
+				<span class="tls-title-wrapper">			
+					<span class="tls-title"><?php _e("Import Slider",REVSLIDER_TEXTDOMAIN); ?></span>					
+				</span>
+			</span>
+		</a>		
+	</li>
 </ul>	
 <script>
   jQuery(document).on("ready",function() {  	

@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 class Vc_Page implements Vc_Render {
 	protected $slug;
@@ -62,6 +59,7 @@ class Vc_Page implements Vc_Render {
 
 		return $this;
 	}
+
 
 	public function render() {
 		vc_include_template( $this->getTemplatePath(),

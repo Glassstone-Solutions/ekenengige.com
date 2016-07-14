@@ -1,13 +1,7 @@
 @vc_gitem_post_data_shortcode_margin_bottom: 15px;
 .vc_grid.vc_row {
-  //Causes https://app.asana.com/0/90442874619636/85765759204968 bug on ios and etc.
-  //.vc_pageable-slide-wrapper {
-  //  > *:hover {
-  //    z-index: 3;
-  //  }
-  //}
   .vc_pageable-slide-wrapper {
-    .vc_grid-item.vc_visible-item:hover {
+    > *:hover {
       z-index: 3;
     }
   }
@@ -37,9 +31,6 @@
   .vc_gitem-link {
     border-bottom: none;
     outline: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
   }
 }
 
@@ -127,6 +118,5 @@
 @import "shortcodes/vc_gitem_gitem_zone_height_mode.less";
 @import "shortcodes/vc_gitem_animated_block.less";
 @import "shortcodes/vc_gitem_post_data.less";
-@import "shortcodes/vc_gitem_post_categories.less";
 
 

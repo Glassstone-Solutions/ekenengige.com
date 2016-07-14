@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 /**
  * Class Vc_Grid_Item to build grid item.
@@ -33,11 +30,11 @@ class Vc_Grid_Item {
 		add_filter( 'vc_shortcode_set_template_vc_button2', array( $this, 'addVcButton2ShortcodesTemplates' ) );
 		add_filter( 'vc_shortcode_set_template_vc_single_image', array(
 			$this,
-			'addVcSingleImageShortcodesTemplates',
+			'addVcSingleImageShortcodesTemplates'
 		) );
 		add_filter( 'vc_shortcode_set_template_vc_custom_heading', array(
 			$this,
-			'addVcCustomHeadingShortcodesTemplates',
+			'addVcCustomHeadingShortcodesTemplates'
 		) );
 		add_filter( 'vc_shortcode_set_template_vc_btn', array( $this, 'addVcBtnShortcodesTemplates' ) );
 
@@ -146,7 +143,7 @@ class Vc_Grid_Item {
 	public static function predefinedTemplates() {
 		if ( false === self::$predefined_templates ) {
 			self::$predefined_templates = apply_filters( 'vc_grid_item_predefined_templates',
-			include vc_path_dir( 'PARAMS_DIR', 'vc_grid_item/templates.php' ) );
+				include vc_path_dir( 'PARAMS_DIR', 'vc_grid_item/templates.php' ) );
 		}
 
 		return self::$predefined_templates;
@@ -225,7 +222,6 @@ class Vc_Grid_Item {
 			$shortcodes_custom_css = visual_composer()->parseShortcodesCustomCss( $predefined_template['template'] );
 		}
 		if ( ! empty( $shortcodes_custom_css ) ) {
-			$shortcodes_custom_css = strip_tags( $shortcodes_custom_css );
 			$output .= '<style type="text/css" data-type="vc_shortcodes-custom-css">';
 			$output .= $shortcodes_custom_css;
 			$output .= '</style>';
@@ -241,9 +237,8 @@ class Vc_Grid_Item {
 	 */
 	public function parseTemplate( $template ) {
 		$this->mapShortcodes();
-		WPBMap::addAllMappedShortcodes();
 		$attr = ' width="' . $this->gridAttribute( 'element_width', 12 ) . '"'
-		        . ' is_end="' . ( 'true' === $this->isEnd() ? 'true' : '' ) . '"';
+		        . ' is_end="' . ( $this->isEnd() === 'true' ? 'true' : '' ) . '"';
 		$template = preg_replace( '/(\[(\[?)vc_gitem\b)/', '$1' . $attr, $template );
 		$this->html_template .= do_shortcode( $template );
 	}
@@ -326,7 +321,6 @@ class Vc_Grid_Item {
 	 * @return mixed|void
 	 */
 	public function attribute( $name, $post, $data = '' ) {
-		$data = html_entity_decode( $data );
 		return apply_filters( 'vc_gitem_template_attribute_' . trim( $name ),
 			( isset( $post->$name ) ? $post->$name : '' ), array(
 				'post' => $post,

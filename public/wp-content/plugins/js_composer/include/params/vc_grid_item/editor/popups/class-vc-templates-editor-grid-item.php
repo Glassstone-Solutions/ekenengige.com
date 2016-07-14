@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 require_once vc_path_dir( 'EDITORS_DIR', 'popups/class-vc-templates-panel-editor.php' );
 require_once vc_path_dir( 'PARAMS_DIR', 'vc_grid_item/class-vc-grid-item.php' );
 
@@ -16,7 +13,7 @@ class Vc_Templates_Editor_Grid_Item extends Vc_Templates_Panel_Editor {
 	}
 
 	public function renderTemplateBlock( $category ) {
-		if ( 'grid_templates' === $category['category'] || 'grid_templates_custom' === $category['category'] ) {
+		if ( 'grid_templates' === $category['category'] ) {
 			$category['output'] = '<div class="vc_col-md-12">';
 			if ( isset( $category['category_name'] ) ) {
 				$category['output'] .= '<h3>' . esc_html( $category['category_name'] ) . '</h3>';
@@ -25,18 +22,23 @@ class Vc_Templates_Editor_Grid_Item extends Vc_Templates_Panel_Editor {
 				$category['output'] .= '<p class="vc_description">' . esc_html( $category['category_description'] ) . '</p>';
 			}
 			$category['output'] .= '</div>';
-
 			$category['output'] .= '
 			<div class="vc_column vc_col-sm-12">
-				<div class="vc_ui-template-list vc_templates-list-my_templates vc_ui-list-bar" data-vc-action="collapseAll">';
+			<ul class="vc_templates-list-grid_templates">';
 			if ( ! empty( $category['templates'] ) ) {
 				foreach ( $category['templates'] as $template ) {
-					$category['output'] .= $this->renderTemplateListItem( $template );
+					$name = isset( $template['name'] ) ? esc_html( $template['name'] ) : esc_html( __( 'No title', 'js_composer' ) );
+					$type = isset( $template['type'] ) ? $template['type'] : 'custom';
+					$custom_class = isset( $template['custom_class'] ) ? $template['custom_class'] : '';
+					$unique_id = isset( $template['unique_id'] ) ? $template['unique_id'] : false; // You must provide unique_id otherwise it will be wrong in rendering
+					// see hook filters in Vc_Templates_Panel_Editor::__construct
+					$category['output'] .= '<li class="vc_col-sm-4 vc_template vc_templates-template-type-' . esc_attr( $type ) . ' ' . esc_attr( $custom_class ) . '"
+									    data-category="' . esc_attr( $category['category'] ) . '"
+									    data-template_unique_id="' . esc_attr( $unique_id ) . '"
+									    data-template_type="' . esc_attr( $type ) . '">' . apply_filters( 'vc_templates_render_template', $name, $template ) . '</li>';
 				}
 			}
-			$category['output'] .= '
-				</div>
-			</div>';
+			$category['output'] .= '</ul></div>';
 		}
 
 		return $category;
@@ -51,50 +53,29 @@ class Vc_Templates_Editor_Grid_Item extends Vc_Templates_Panel_Editor {
 	 * @return string
 	 */
 	public function renderTemplateWindowGrid( $template_name, $template_data ) {
-		if ( 'grid_templates' === $template_data['type'] || 'grid_templates_custom' === $template_data['type'] ) {
+		if ( $template_data['type'] === 'grid_templates' ) {
 			return $this->renderTemplateWindowGridTemplate( $template_name, $template_data );
 		}
 
 		return $template_name;
+
 	}
 
 	/**
 	 * @since 4.4
 	 *
-	 * @param $templateName
-	 * @param $templateData
+	 * @param $template_name
+	 * @param $template_data
 	 *
 	 * @return string
 	 */
-	protected function renderTemplateWindowGridTemplate( $templateName, $templateData ) {
-
+	protected function renderTemplateWindowGridTemplate( $template_name, $template_data ) {
 		ob_start();
-
-		$templateId = esc_attr( $templateData['unique_id'] );
-		$templateName = esc_html( $templateName );
-		$templateNameLower = strtolower( $templateName );
-		$templateType = esc_attr( isset( $templateData['type'] ) ? $templateData['type'] : 'custom' );
-		$customClass = esc_attr( isset( $templateData['custom_class'] ) ? $templateData['custom_class'] : '' );
-		$previewTemplateTitle = esc_attr( 'Preview template', 'js_composer' );
-		$addTemplateTitle = esc_attr( 'Preview template', 'js_composer' );
-
-		echo <<<HTML
-			<button type="button" class="vc_ui-list-bar-item-trigger" title="$addTemplateTitle"
-				data-template-handler=""
-				data-vc-ui-element="template-title">$templateName</button>
-			<div class="vc_ui-list-bar-item-actions">
-				<button type="button" class="vc_general vc_ui-control-button" title="$addTemplateTitle"
-					 	data-template-handler=""
-						data-vc-ui-element="template-title">
-					<i class="vc_ui-icon-pixel vc_ui-icon-pixel-control-add-dark"></i>
-				</button>
-				<button type="button" class="vc_general vc_ui-control-button" title="$previewTemplateTitle"
-					data-vc-preview-handler data-vc-container=".vc_ui-list-bar" data-vc-target="[data-template_id=$templateId]">
-					<i class="vc_ui-icon-pixel vc_ui-preview-icon"></i>
-				</button>
-			</div>
-HTML;
-
+		?>
+		<div class="vc_template-wrapper" data-template_id="<?php echo esc_attr( $template_data['unique_id'] ); ?>">
+			<a data-template-handler="true" class="vc_template-display-title vc_form-control" data-vc-ui-element="template-title"
+			   href="javascript:;"><?php echo esc_html( $template_name ); ?></a></div>
+		<?php
 		return ob_get_clean();
 	}
 
@@ -102,7 +83,7 @@ HTML;
 		if ( ! $template_id ) {
 			$template_id = vc_post_param( 'template_unique_id' );
 		}
-		if ( ! isset( $template_id ) || '' === $template_id ) {
+		if ( ! isset( $template_id ) || $template_id === "" ) {
 			echo 'Error: TPL-02';
 			die();
 		}
@@ -110,23 +91,7 @@ HTML;
 		if ( false !== ( $predefined_template = Vc_Grid_Item::predefinedTemplate( $template_id ) ) ) {
 			echo trim( $predefined_template['template'] );
 		}
-	}
-
-	public function loadCustomTemplate( $template_id = false ) {
-		if ( ! $template_id ) {
-			$template_id = vc_post_param( 'template_unique_id' );
-		}
-		if ( ! isset( $template_id ) || '' === $template_id ) {
-			echo 'Error: TPL-02';
-			die();
-		}
-
-		$post = get_post( $template_id );
-
-		if ( $post && Vc_Grid_Item_Editor::postType() == $post->post_type ) {
-			return $post->post_content;
-		}
-		return '';
+		die();
 	}
 
 	public function getAllTemplates() {
@@ -150,43 +115,9 @@ HTML;
 			$arr_category['templates'] = $category_templates;
 			$data[] = $arr_category;
 		}
-		$custom_grid_templates = $this->getCustomTemplateList();
-		if ( ! empty( $custom_grid_templates ) ) {
-			$arr_category = array(
-				'category' => 'grid_templates_custom',
-				'category_name' => __( 'Custom Grid Templates', 'js_composer' ),
-				'category_weight' => 10,
-			);
-			$category_templates = array();
-			foreach ( $custom_grid_templates as $template_name => $template_id ) {
-				$category_templates[] = array(
-					'unique_id' => $template_id,
-					'name' => $template_name,
-					'type' => 'grid_templates_custom',
-					// for rendering in backend/frontend with ajax);
-				);
-			}
-			$arr_category['templates'] = $category_templates;
-			$data[] = $arr_category;
-		}
-
 
 		// To get any other 3rd "Custom template" - do this by hook filter 'vc_get_all_templates'
 		return apply_filters( 'vc_get_all_templates', $data );
-	}
-
-	protected function getCustomTemplateList() {
-		$list = array();
-		$templates = get_posts( array(
-			'post_type' => Vc_Grid_Item_Editor::postType(),
-			'numberposts' => - 1
-		) );
-		foreach ( $templates as $template ) {
-			$id = $template->ID;
-			$list[ $template->post_title ] = $id;
-		}
-
-		return $list;
 	}
 
 	public function getGridTemplates() {
@@ -194,4 +125,5 @@ HTML;
 
 		return $list;
 	}
+
 }

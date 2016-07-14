@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 	protected $controls_css_settings = 'out-tc vc_controls-content-widget';
@@ -16,8 +13,6 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 	 * @var WPBakeryShortCode_VC_Tta_Section
 	 */
 	protected $sectionClass;
-
-	public $nonDraggableClass = 'vc-non-draggable-container';
 
 	public function getFileName() {
 		return 'vc_tta_global';
@@ -66,7 +61,7 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 	public function getColumnControls( $controls = 'full', $extended_css = '' ) {
 		// we don't need containers bottom-controls for tabs
 		if ( 'bottom-controls' === $extended_css ) {
-			return '';
+			return "";
 		}
 		$column_controls = $this->getColumnControlsModular();
 
@@ -136,13 +131,9 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 
 		$autoplay = isset( $this->atts['autoplay'] ) ? trim( $this->atts['autoplay'] ) : false;
 		if ( $autoplay && 'none' !== $autoplay && intval( $autoplay ) > 0 ) {
-			$attributes[] = 'data-vc-tta-autoplay="' . esc_attr(
-				json_encode(
-					array(
-							'delay' => intval( $autoplay ) * 1000,
-						)
-				)
-			) . '"';
+			$attributes[] = 'data-vc-tta-autoplay="' . esc_attr( json_encode( array(
+					'delay' => intval( $autoplay ) * 1000
+				) ) ) . '"';
 		}
 
 		return implode( ' ', $attributes );
@@ -157,7 +148,7 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 			return $this->template_vars[ $string ];
 		}
 
-		return '';
+		return "";
 	}
 
 	/**
@@ -215,18 +206,17 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 			if ( ! $isPageEditable ) {
 				$panelsContent = str_replace( '{{{ control-icon }}}',
 					'<i class="vc_tta-controls-icon vc_tta-controls-icon-' . $atts['c_icon'] . '"></i>',
-					$panelsContent
-				);
+					$panelsContent );
 			} else {
 				$panelsContent = str_replace( '{{{ control-icon }}}',
 					'<i class="vc_tta-controls-icon" data-vc-tta-controls-icon="' . $atts['c_icon'] . '"></i>',
-					$panelsContent
-				);
+					$panelsContent );
 			}
+
 		} else {
 			$panelsContent = str_replace( '{{{ control-icon }}}',
 				'',
-			$panelsContent );
+				$panelsContent );
 		}
 
 		return $panelsContent;
@@ -342,7 +332,7 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 			VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Tta_Section' );
 			if ( $active_section < 1 ) {
 				$active_section = 1;
-			} elseif ( $active_section > WPBakeryShortCode_VC_Tta_Section::$self_count ) {
+			} else if ( $active_section > WPBakeryShortCode_VC_Tta_Section::$self_count ) {
 				$active_section = WPBakeryShortCode_VC_Tta_Section::$self_count;
 			}
 		}
@@ -387,15 +377,8 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 
 		return implode( '', $html );
 	}
-	public function enqueueTtaStyles() {
-		wp_register_style( 'vc_tta_style', vc_asset_url( 'css/js_composer_tta.min.css' ), false, WPB_VC_VERSION );
-		wp_enqueue_style('vc_tta_style');
-	}
 
 	public function enqueueTtaScript() {
-		wp_register_script( 'vc_accordion_script', vc_asset_url( 'lib/vc_accordion/vc-accordion.min.js' ), array( 'jquery' ), WPB_VC_VERSION, true );
-		wp_register_script( 'vc_tta_autoplay_script', vc_asset_url( 'lib/vc-tta-autoplay/vc-tta-autoplay.min.js' ), array( 'vc_accordion_script' ), WPB_VC_VERSION, true );
-
 		wp_enqueue_script( 'vc_accordion_script' );
 		if ( ! vc_is_page_editable() ) {
 			wp_enqueue_script( 'vc_tta_autoplay_script' );
@@ -410,16 +393,6 @@ class WPBakeryShortCode_VC_Tta_Accordion extends WPBakeryShortCodesContainer {
 	 * @return string
 	 */
 	protected function outputTitle( $title ) {
-		return '';
-	}
-	/**
-	 * Check is allowed to add another element inside current element.
-	 *
-	 * @since 4.8
-	 *
-	 * @return bool
-	 */
-	public function getAddAllowed() {
-		return vc_user_access_check_shortcode_all( 'vc_tta_section' );
+		return "";
 	}
 }

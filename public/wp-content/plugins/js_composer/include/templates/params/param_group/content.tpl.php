@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 $template = vc_include_template( 'params/param_group/inner_content.tpl.php' );
 

@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-
 /**
  * WPBakery Visual Composer Main manager.
  *
@@ -22,18 +18,8 @@ class Vc_Mapper {
 	 * @var array
 	 */
 	protected $init_activity = array();
-	/**
-	 *
-	 *
-	 * @since 4.9
-	 *
-	 * @var array
-	 */
-	protected $element_activities = array();
 
 	protected $hasAccess = array();
-
-	// @todo fix_roles and maybe remove/@deprecate this
 	protected $checkForAccess = true;
 
 	/**
@@ -52,7 +38,7 @@ class Vc_Mapper {
 		do_action( 'vc_mapper_init_before' );
 		require_once vc_path_dir( 'PARAMS_DIR', 'load.php' );
 		WPBMap::setInit();
-		require_once vc_path_dir( 'CONFIG_DIR', 'lean-map.php' );
+		require_once vc_path_dir( 'CONFIG_DIR', 'map.php' );
 		$this->callActivities();
 		do_action( 'vc_mapper_init_after' );
 	}
@@ -69,32 +55,7 @@ class Vc_Mapper {
 	 * @param array $params - list of attributes for object method
 	 */
 	public function addActivity( $object, $method, $params = array() ) {
-		$this->init_activity[] = array(
-			$object,
-			$method,
-			$params,
-		);
-	}
-
-	/**
-	 * This method is called by VC objects methods if it is called before VC initialization.
-	 *
-	 * @see WPBMAP
-	 * @since  4.9
-	 * @access public
-	 *
-	 * @param $tag - shortcode tag of element
-	 * @param $method - method name
-	 * @param array $params - list of attributes for object method
-	 */
-	public function addElementActivity( $tag, $method, $params = array() ) {
-		if ( ! isset( $this->element_activities[ $tag ] ) ) {
-			$this->element_activities[ $tag ] = array();
-		}
-		$this->element_activities[ $tag ][] = array(
-			$method,
-			$params,
-		);
+		$this->init_activity[] = array( $object, $method, $params );
 	}
 
 	/**
@@ -110,7 +71,7 @@ class Vc_Mapper {
 		do_action( 'vc_mapper_call_activities_before' );
 		while ( $activity = each( $this->init_activity ) ) {
 			list( $object, $method, $params ) = $activity[1];
-			if ( 'mapper' === $object ) {
+			if ( $object === 'mapper' ) {
 				switch ( $method ) {
 					case 'map':
 						WPBMap::map( $params['tag'], $params['attributes'] );
@@ -143,7 +104,6 @@ class Vc_Mapper {
 	 *
 	 * @param $shortcode
 	 *
-	 * @todo fix_roles and maybe remove/@deprecate this
 	 * @since 4.5
 	 * @return bool
 	 */
@@ -152,7 +112,18 @@ class Vc_Mapper {
 			if ( isset( $this->hasAccess[ $shortcode ] ) ) {
 				return $this->hasAccess[ $shortcode ];
 			} else {
-				$this->hasAccess[ $shortcode ] = vc_user_access_check_shortcode_edit( $shortcode );
+				global $current_user;
+				get_currentuserinfo();
+				$show = true;
+
+				$settings = vc_settings()->get( 'groups_access_rules' );
+				foreach ( $current_user->roles as $role ) {
+					if ( isset( $settings[ $role ]['shortcodes'] ) && ! isset( $settings[ $role ]['shortcodes'][ $shortcode ] ) ) {
+						$show = false;
+						break;
+					}
+				}
+				$this->hasAccess[ $shortcode ] = $show;
 			}
 
 			return $this->hasAccess[ $shortcode ];
@@ -162,48 +133,17 @@ class Vc_Mapper {
 	}
 
 	/**
-	 * @todo fix_roles and maybe remove/@deprecate this
-	 * @since 4.5
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isCheckForAccess() {
 		return $this->checkForAccess;
 	}
 
 	/**
-	 * @todo fix_roles and maybe remove/@deprecate this
-	 * @since 4.5
-	 *
-	 * @param bool $checkForAccess
+	 * @param boolean $checkForAccess
 	 */
 	public function setCheckForAccess( $checkForAccess ) {
 		$this->checkForAccess = $checkForAccess;
 	}
 
-	public function callElementActivities( $tag ) {
-		do_action( 'vc_mapper_call_activities_before' );
-		if ( isset( $this->element_activities[ $tag ] ) ) {
-			while ( $activity = each( $this->element_activities[ $tag ] ) ) {
-				list( $method, $params ) = $activity[1];
-				switch ( $method ) {
-					case 'drop_param':
-						WPBMap::dropParam( $params['name'], $params['attribute_name'] );
-						break;
-					case 'add_param':
-						WPBMap::addParam( $params['name'], $params['attribute'] );
-						break;
-					case 'mutate_param':
-						WPBMap::mutateParam( $params['name'], $params['attribute'] );
-						break;
-					case 'drop_shortcode':
-						WPBMap::dropShortcode( $params['name'] );
-						break;
-					case 'modify':
-						WPBMap::modify( $params['name'], $params['setting_name'], $params['value'] );
-						break;
-				}
-			}
-		}
-
-	}
 }

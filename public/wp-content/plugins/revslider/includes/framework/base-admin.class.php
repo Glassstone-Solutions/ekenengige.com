@@ -44,8 +44,6 @@ class RevSliderBaseAdmin extends RevSliderBase {
 		if($this->isInsidePlugin() == true){
 			add_action('admin_enqueue_scripts', array('RevSliderBaseAdmin', 'addCommonScripts'));
 			add_action('admin_enqueue_scripts', array('RevSliderAdmin', 'onAddScripts'));
-		}else{
-			add_action('admin_enqueue_scripts', array('RevSliderBaseAdmin', 'addGlobalScripts'));
 		}
 		
 		//a must event for any admin. call onActivate function.
@@ -153,14 +151,6 @@ class RevSliderBaseAdmin extends RevSliderBase {
 		self::$menuRole = $menuRole;
 	}
 	
-	
-	/**
-	 * get the menu role - for viewing menus
-	 */
-	public static function getMenuRole(){
-		return self::$menuRole;
-	}
-	
 	/**
 	 * 
 	 * set startup error to be shown in master view
@@ -185,16 +175,7 @@ class RevSliderBaseAdmin extends RevSliderBase {
 	
 	
 	/**
-	 * add global used scripts
-	 * @since: 5.1.1
-	 */
-	public static function addGlobalScripts(){
-		wp_enqueue_script(array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'wpdialogs'));
-		wp_enqueue_style(array('wp-jquery-ui', 'wp-jquery-ui-dialog', 'wp-jquery-ui-core'));
-	}
-	
-	
-	/**
+	 * 
 	 * add common used scripts
 	 */
 	public static function addCommonScripts(){
@@ -281,7 +262,7 @@ class RevSliderBaseAdmin extends RevSliderBase {
 				self::$tempVars["is_masterView"] = true;
 				require $masterViewFilepath;
 			}else{		//simple require the view file.
-				if(!in_array($view, self::$allowed_views)) UniteFunctionsRev::throwError(__('Wrong Request', 'revslider'));
+				if(!in_array($view, self::$allowed_views)) UniteFunctionsRev::throwError(__('Wrong Request', REVSLIDER_TEXTDOMAIN));
 				
 				switch($view){ //switch URLs to corresponding php files
 					case 'slide':

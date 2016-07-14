@@ -1,8 +1,3 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
-?>
 <div id="vc_template-html">
 	<?php
 	/** @var $editor Vc_Frontend_Editor */

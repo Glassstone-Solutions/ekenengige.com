@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 add_action( 'wp_ajax_vc_action_save_settings_preset', 'vc_action_save_settings_preset' );
 add_action( 'wp_ajax_vc_action_set_as_default_settings_preset', 'vc_action_set_as_default_settings_preset' );
@@ -10,29 +7,22 @@ add_action( 'wp_ajax_vc_action_restore_default_settings_preset', 'vc_action_rest
 add_action( 'wp_ajax_vc_action_get_settings_preset', 'vc_action_get_settings_preset' );
 add_action( 'wp_ajax_vc_action_render_settings_preset_popup', 'vc_action_render_settings_preset_popup' );
 add_action( 'wp_ajax_vc_action_render_settings_preset_title_prompt', 'vc_action_render_settings_preset_title_prompt' );
-add_action( 'vc_restore_default_settings_preset', 'vc_action_set_as_default_settings_preset', 10, 2 );
-add_action( 'vc_register_settings_preset', 'vc_register_settings_preset', 10, 4 );
-
-function vc_include_settings_preset_class() {
-	vc_user_access()
-		->checkAdminNonce()
-		->validateDie()
-		->wpAny( 'edit_posts', 'edit_pages' )
-		->validateDie()
-		->part( 'presets' )
-		->can()
-		->validateDie();
-
-	require_once vc_path_dir( 'AUTOLOAD_DIR', 'class-vc-settings-presets.php' );
-}
 
 /**
- * @return Vc_Vendor_Preset
+ * Include settings preset class
+ *
+ * Also check if user has 'edit_posts' capability and if not, respond with unsuccessful status
+ *
+ * @since 4.8
  */
-function vc_vendor_preset() {
-	require_once vc_path_dir( 'AUTOLOAD_DIR', 'class-vc-vendor-presets.php' );
+function vc_include_settings_preset_class() {
+	if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+		wp_send_json( array(
+			'success' => false
+		) );
+	}
 
-	return Vc_Vendor_Preset::getInstance();
+	require_once vc_path_dir( 'AUTOLOAD_DIR', 'class-vc-settings-presets.php' );
 }
 
 /**
@@ -50,10 +40,6 @@ function vc_vendor_preset() {
  */
 function vc_action_save_settings_preset() {
 	vc_include_settings_preset_class();
-	vc_user_access()
-		->part( 'presets' )
-		->checkStateAny( true, null )
-		->validateDie(); // user must have permission to save presets
 
 	$id = Vc_Settings_Preset::saveSettingsPreset(
 		vc_post_param( 'shortcode_name' ),
@@ -65,7 +51,7 @@ function vc_action_save_settings_preset() {
 	$response = array(
 		'success' => (bool) $id,
 		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( vc_post_param( 'shortcode_name' ) ),
-		'id' => $id,
+		'id' => $id
 	);
 
 	wp_send_json( $response );
@@ -84,10 +70,6 @@ function vc_action_save_settings_preset() {
  */
 function vc_action_set_as_default_settings_preset() {
 	vc_include_settings_preset_class();
-	vc_user_access()
-		->part( 'presets' )
-		->checkStateAny( true, null )
-		->validateDie(); // user must have permission to set as default presets
 
 	$id = vc_post_param( 'id' );
 	$shortcode_name = vc_post_param( 'shortcode_name' );
@@ -96,7 +78,7 @@ function vc_action_set_as_default_settings_preset() {
 
 	$response = array(
 		'success' => $status,
-		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( $shortcode_name ),
+		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( $shortcode_name )
 	);
 
 	wp_send_json( $response );
@@ -114,10 +96,6 @@ function vc_action_set_as_default_settings_preset() {
  */
 function vc_action_restore_default_settings_preset() {
 	vc_include_settings_preset_class();
-	vc_user_access()
-		->part( 'presets' )
-		->checkStateAny( true, null )
-		->validateDie(); // user must have permission to restore presets
 
 	$shortcode_name = vc_post_param( 'shortcode_name' );
 
@@ -125,7 +103,7 @@ function vc_action_restore_default_settings_preset() {
 
 	$response = array(
 		'success' => $status,
-		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( $shortcode_name ),
+		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( $shortcode_name )
 	);
 
 	wp_send_json( $response );
@@ -144,10 +122,6 @@ function vc_action_restore_default_settings_preset() {
  */
 function vc_action_delete_settings_preset() {
 	vc_include_settings_preset_class();
-	vc_user_access()
-		->part( 'presets' )
-		->checkStateAny( true, null )
-		->validateDie(); // user must have permission to delete presets
 
 	$default = get_post_meta( vc_post_param( 'id' ), '_vc_default', true );
 
@@ -158,7 +132,7 @@ function vc_action_delete_settings_preset() {
 	$response = array(
 		'success' => $status,
 		'default' => $default,
-		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( vc_post_param( 'shortcode_name' ) ),
+		'html' => Vc_Settings_Preset::getRenderedSettingsPresetPopup( vc_post_param( 'shortcode_name' ) )
 	);
 
 	wp_send_json( $response );
@@ -182,11 +156,11 @@ function vc_action_get_settings_preset() {
 	if ( false !== $data ) {
 		$response = array(
 			'success' => true,
-			'data' => $data,
+			'data' => $data
 		);
 	} else {
 		$response = array(
-			'success' => false,
+			'success' => false
 		);
 	}
 
@@ -203,11 +177,12 @@ function vc_action_get_settings_preset() {
  */
 function vc_action_render_settings_preset_popup() {
 	vc_include_settings_preset_class();
+
 	$html = Vc_Settings_Preset::getRenderedSettingsPresetPopup( vc_post_param( 'shortcode_name' ) );
 
 	$response = array(
 		'success' => true,
-		'html' => $html,
+		'html' => $html
 	);
 
 	wp_send_json( $response );
@@ -221,37 +196,19 @@ function vc_action_render_settings_preset_popup() {
  * @return string
  */
 function vc_action_render_settings_preset_title_prompt() {
-	vc_user_access()
-		->checkAdminNonce()
-		->validateDie()
-		->wpAny( 'edit_posts', 'edit_pages' )
-		->validateDie()
-		->part( 'presets' )
-		->can()
-		->validateDie();
-
+	if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+		wp_send_json( array(
+			'success' => false
+		) );
+	}
 	ob_start();
 	vc_include_template( apply_filters( 'vc_render_settings_preset_title_prompt', 'editors/partials/prompt.tpl.php' ) );
 	$html = ob_get_clean();
 
 	$response = array(
 		'success' => true,
-		'html' => $html,
+		'html' => $html
 	);
 
 	wp_send_json( $response );
-}
-
-/**
- * Register (add) new vendor preset
- *
- * @since 4.8
- *
- * @param string $title
- * @param string $shortcode
- * @param array $params
- * @param bool $default
- */
-function vc_register_settings_preset( $title, $shortcode, $params, $default = false ) {
-	vc_vendor_preset()->add( $title, $shortcode, $params, $default );
 }

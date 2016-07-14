@@ -10,8 +10,6 @@ $sliderID = self::getGetVar('id');
 
 $arrFieldsParams = array();
 
-$uslider = new RevSlider();
-
 if(!empty($sliderID)){
 	$slider = new RevSlider();
 	$slider->initByID($sliderID);

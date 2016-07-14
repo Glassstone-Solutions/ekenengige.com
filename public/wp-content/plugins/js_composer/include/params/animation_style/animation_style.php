@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	die( '-1' );
-}
 
 /**
  * Class Vc_ParamAnimation
@@ -152,7 +149,7 @@ class Vc_ParamAnimation {
 					),
 					__( 'fadeInLeftBig', 'js_composer' ) => array(
 						'value' => 'fadeInLeftBig',
-						'type' => 'in',
+						'type' => 'in'
 					),
 					__( 'fadeInRight', 'js_composer' ) => array(
 						'value' => 'fadeInRight',

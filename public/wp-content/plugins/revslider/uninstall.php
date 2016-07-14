@@ -31,6 +31,8 @@ delete_option('revslider-latest-version');
 delete_option('revslider-update-check-short');
 delete_option('revslider-update-check');
 delete_option('revslider_update_info');
+delete_option('revslider-api-key');
+delete_option('revslider-username');
 delete_option('revslider-code');
 delete_option('revslider-valid');
 delete_option('revslider-valid-notice');
@@ -39,5 +41,4 @@ delete_option('revslider-valid-notice');
 //needs to be deleted so that everything gets checked at a new installation
 delete_option('revslider_table_version');
 delete_option('revslider_checktables');
-delete_option('rs_public_version');
 ?>
