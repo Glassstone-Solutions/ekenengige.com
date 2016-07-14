@@ -1,1 +1,0 @@
-<span class="loader-border"><span class="loader-inner"></span></span>

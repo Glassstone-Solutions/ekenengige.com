@@ -1,1 +1,0 @@
-<?php wyde_sidebar(); ?>
